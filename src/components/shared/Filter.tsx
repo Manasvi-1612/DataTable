@@ -1,5 +1,3 @@
-import * as React from "react"
-
 import {
     Select,
     SelectContent,
@@ -9,21 +7,66 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import { useSelector } from "react-redux"
+import { RootState } from "@/redux/store"
+import { Input } from "../ui/input"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog"
+import { Button } from "../ui/button"
+import { useState, startTransition } from "react"
+import { useDispatch } from "react-redux"
+import { addType } from "@/redux/slices/typeSlice"
 
-export function Filter() {
+type FilterProps = {
+    value?: string,
+    onChangeHandler?: (value: string) => void
+}
+
+export function Filter({ value, onChangeHandler }: FilterProps) {
+
+    const types = useSelector((state: RootState) => state.productsType.data)
+
+    const [productType, setProductType] = useState<string>("")
+    const [open, setOpen] = useState(false)
+
+    const dispatch = useDispatch()
+
+    const handleAddType = () => {
+        if (productType.trim() === "") {
+            setOpen(!open)
+            return
+        }
+        dispatch(addType(productType))
+        setOpen(!open)
+    }
+
     return (
-        <Select>
+        <Select onValueChange={onChangeHandler} defaultValue={value}>
             <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select a fruit" />
+                <SelectValue placeholder="Select Product Type" />
             </SelectTrigger>
             <SelectContent>
                 <SelectGroup>
-                    <SelectLabel>Fruits</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
+                    <SelectLabel>Product Type</SelectLabel>
+                    {types.map((type: string) => (
+                        <SelectItem key={type} value={type}>{type}</SelectItem>
+                    ))}
+
+                    <Dialog open={open} onOpenChange={setOpen}>
+                        <DialogTrigger className="w-full flex rounded-sm py-3 pl-8">Add product type</DialogTrigger>
+                        <DialogContent className="bg-white">
+                            <DialogHeader>
+                                <DialogTitle>New Product Type</DialogTitle>
+                                <DialogDescription>
+                                    <Input type="text" value={productType} className="mt-3" placeholder="Product Type Name" onChange={(e) => setProductType(e.target.value)} />
+                                </DialogDescription>
+                            </DialogHeader>
+                            <DialogFooter>
+                                {/* startTransition lets you update the state without blocking the UI. */}
+                                <Button type="submit" variant={'outline'} onClick={() => startTransition(handleAddType)}>Add</Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+
                 </SelectGroup>
             </SelectContent>
         </Select>
