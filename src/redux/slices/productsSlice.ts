@@ -27,7 +27,7 @@ const productsSlice = createSlice({
         addProduct: (state, action: PayloadAction<Product>) => { // Add type annotation for state
             console.log(action.payload);
             const newProduct = action.payload; // Add type annotation for newProduct
-            state.data.push({ ...newProduct, id: nanoid(), type: newProduct.type.toLowerCase() });
+            state.data.push({ ...newProduct, id: nanoid(), type: newProduct.type });
         },
     },
 });
