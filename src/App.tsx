@@ -1,6 +1,6 @@
 import { DataTable } from "@/components/shared/DataTable"
 import { AddProduct } from "./components/shared/AddProduct"
-import { Filter } from "@/components/shared/Filter"
+import Filter  from "@/components/shared/Filter"
 
 function App() {
 

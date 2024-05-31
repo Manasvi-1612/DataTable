@@ -14,7 +14,6 @@ import { startTransition, useState } from "react"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -23,20 +22,48 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { Filter } from "./Filter"
+import { TypeDropdown } from "./TypeDropdown"
+import { useDispatch } from "react-redux"
+import { addProduct } from "@/redux/slices/productsSlice"
+
+const ProductSchema = z.object({
+  name: z.string().trim().min(3, 'Name must be at least 3 characters'),
+  type: z.string().min(1, 'Please select a type'),
+  price: z.preprocess((val: any) => parseInt(val), z.number().min(1)),
+  stock: z.preprocess((val: any) => parseInt(val), z.number()),
+  soldUnits: z.preprocess((val: any) => parseInt(val), z.number()),
+})
 
 export function AddProduct() {
 
   const [open, setOpen] = useState(false)
+  const dispatch = useDispatch()
 
-  const handleSubmit = () => {
-    console.log("jfoejoi")
-    setOpen(!open)
+  const initialValues = {
+    name: "",
+    type: "",
+    price: 0,
+    stock: 0,
+    soldUnits: 0
   }
 
-  const form = useForm({
-
+  const form = useForm<z.infer<typeof ProductSchema>>({
+    resolver: zodResolver(ProductSchema),
+    defaultValues: initialValues
   })
+
+  const handleSubmit = (values: z.infer<typeof ProductSchema>) => {
+    try {
+      dispatch(addProduct({ ...values, id: '' }))
+      form.reset()
+      setOpen(!open)
+    } catch (error) {
+      console.log(error)
+      setOpen(!open)
+    }
+  }
+
+
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -74,9 +101,9 @@ export function AddProduct() {
                   name="type"
                   render={({ field }) => (
                     <FormItem className="grid gap-4">
-                      <FormLabel> Product Type</FormLabel>
+                      <FormLabel>Product Type</FormLabel>
                       <FormControl>
-                        <Filter onChangeHandler={field.onChange} value={field.value} />
+                        <TypeDropdown onChangeHandler={field.onChange} value={field.value} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -92,7 +119,7 @@ export function AddProduct() {
                     <FormItem className="grid gap-4">
                       <FormLabel>Product Price</FormLabel>
                       <FormControl>
-                        <Input placeholder="650" {...field} />
+                        <Input type="number" placeholder="650" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -106,7 +133,7 @@ export function AddProduct() {
                     <FormItem className="grid gap-4">
                       <FormLabel>Current Stock</FormLabel>
                       <FormControl>
-                        <Input placeholder="100" {...field} />
+                        <Input type="number" placeholder="100" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -122,7 +149,7 @@ export function AddProduct() {
                     <FormItem className="grid gap-4 col-span-3">
                       <FormLabel>Sold Units</FormLabel>
                       <FormControl>
-                        <Input placeholder="60" {...field} />
+                        <Input type="number" placeholder="60" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
