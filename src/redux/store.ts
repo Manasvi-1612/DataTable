@@ -3,7 +3,6 @@ import { rootReducer } from "./rootReducer";
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
 
-const dev = import.meta.env.DEV
 
 const persistConfig = {
     key: 'root',
