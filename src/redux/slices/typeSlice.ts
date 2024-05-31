@@ -1,8 +1,9 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState = {
-    data: ['type1']
-} as { data: string[] };
+    data: ['type1'],
+    selectedType: 'All'
+} as { data: string[], selectedType: string };
 
 
 const typeSlice = createSlice({
@@ -11,9 +12,12 @@ const typeSlice = createSlice({
     reducers: {
         addType: (state, action) => {
             state.data.push(action.payload)
+        },
+        selectType: (state, action: PayloadAction<string>) => {
+            state.selectedType = action.payload;
         }
     }
 })
 
-export const { addType } = typeSlice.actions
+export const { addType,selectType } = typeSlice.actions
 export default typeSlice.reducer;

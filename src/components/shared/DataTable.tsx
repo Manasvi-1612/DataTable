@@ -11,57 +11,59 @@ import {
 
 import { useSelector } from "react-redux"
 import { RootState } from "@/redux/store"
-import { DropdownMenuTrigger, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenu } from "@/components/ui/dropdown-menu"
-import { Button } from "@/components/ui/button"
-import SettingsIcon from "./SettingsIcon"
+import Dropdown from "./Dropdown"
+import { useState } from "react"
 
 export function DataTable() {
 
     const products = useSelector((state: RootState) => state.products.data)
+
+    const selectedType = useSelector((state: RootState) => state.productsType.selectedType);
+
+    const filteredProducts = selectedType === 'All'
+        ? products
+        : products.filter(product => product.type === selectedType);
+
+
+    const [columnVisibility, setColumnVisibility] = useState({
+        "name": true,
+        "price": true,
+        "type": true,
+        "stock": true,
+        "soldUnits": true,
+    })
+
 
     return (
         <Table>
             <TableCaption>A list of the Products.</TableCaption>
             <TableHeader>
                 <TableRow>
-                    <TableHead className="w-[100px]">Product Name</TableHead>
-                    <TableHead>Product Price</TableHead>
-                    <TableHead>Product Type</TableHead>
-                    <TableHead>Current Stock</TableHead>
-                    <TableHead>Sold Units</TableHead>
-                    <TableHead><DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button size="icon" variant="ghost">
-                                <SettingsIcon />
-                                <span className="sr-only">Toggle columns</span>
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuCheckboxItem checked>Product Name</DropdownMenuCheckboxItem>
-                            <DropdownMenuCheckboxItem checked>Price</DropdownMenuCheckboxItem>
-                            <DropdownMenuCheckboxItem checked>Type</DropdownMenuCheckboxItem>
-                            <DropdownMenuCheckboxItem checked>Stock</DropdownMenuCheckboxItem>
-                            <DropdownMenuCheckboxItem checked>Sold Units</DropdownMenuCheckboxItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                    {columnVisibility["name"] && <TableHead className="w-[100px]">Product Name</TableHead>}
+                    {columnVisibility["price"] &&<TableHead>Product Price</TableHead>}
+                    {columnVisibility["type"] &&<TableHead>Product Type</TableHead>}
+                    {columnVisibility["stock"] &&<TableHead>Current Stock</TableHead>}
+                    {columnVisibility["soldUnits"] &&<TableHead>Sold Units</TableHead>}
+                    <TableHead>
+                        <Dropdown columnVisibility={columnVisibility} setColumnVisibility={setColumnVisibility} />
                     </TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {products.map((product) => (
+                {filteredProducts.map((product) => (
                     <TableRow key={product.id}>
-                        <TableCell className="font-medium">{product.name}</TableCell>
-                        <TableCell>{product.price}</TableCell>
-                        <TableCell>{product.type}</TableCell>
-                        <TableCell>{product.stock}</TableCell>
-                        <TableCell>{product.soldUnits}</TableCell>
+                        {columnVisibility["name"] &&<TableCell className="font-medium">{product.name}</TableCell>}
+                        {columnVisibility["price"] &&<TableCell>{product.price}</TableCell>}
+                        {columnVisibility["type"] &&<TableCell>{product.type}</TableCell>}
+                        {columnVisibility["stock"] &&<TableCell>{product.stock}</TableCell>}
+                        {columnVisibility["soldUnits"] &&<TableCell>{product.soldUnits}</TableCell>}
                     </TableRow>
                 ))}
             </TableBody>
             <TableFooter>
                 <TableRow>
                     <TableCell colSpan={3}>Total</TableCell>
-                    <TableCell className="text-right">{products.length}</TableCell>
+                    <TableCell className="text-right">{filteredProducts.length}</TableCell>
                 </TableRow>
             </TableFooter>
         </Table>
