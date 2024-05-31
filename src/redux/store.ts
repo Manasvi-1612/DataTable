@@ -19,6 +19,7 @@ export const store = configureStore({
         immutableCheck: false,
     }),
     devTools: false,
+
 })
 
 export const persistor = persistStore(store)
