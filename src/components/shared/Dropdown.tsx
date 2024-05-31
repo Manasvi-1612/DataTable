@@ -1,7 +1,8 @@
-import React from 'react';
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '../ui/dropdown-menu';
+
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import SettingsIcon from './SettingsIcon';
-import { Button } from '../ui/button';
+import { Button } from '@/components/ui/button';
+
 
 type DropdownProps = {
     columnVisibility: {
