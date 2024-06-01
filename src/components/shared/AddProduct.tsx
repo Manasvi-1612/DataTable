@@ -27,7 +27,7 @@ import { addProduct } from "@/redux/slices/productsSlice"
 const ProductSchema = z.object({
   name: z.string().trim().min(3, 'Name must be at least 3 characters'),
   type: z.string().min(1, 'Please select a type'),
-  price: z.preprocess((val: any) => parseInt(val), z.number().min(1)),
+  price: z.preprocess((val: any) => parseInt(val), z.number().min(1).max(1250)),
   stock: z.preprocess((val: any) => parseInt(val), z.number()),
   soldUnits: z.preprocess((val: any) => parseInt(val), z.number()),
 })
@@ -66,7 +66,7 @@ export function AddProduct() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Add Product</Button>
+        <Button variant="outline" className="max-w-[180px]">Add Product</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>

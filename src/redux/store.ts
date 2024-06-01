@@ -7,6 +7,7 @@ import storage from 'redux-persist/lib/storage' // defaults to localStorage for 
 const persistConfig = {
     key: 'root',
     storage,
+    blacklist:['productsRange'] // The key here should match the one used in rootReducer
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

@@ -20,9 +20,13 @@ export function DataTable() {
 
     const selectedType = useSelector((state: RootState) => state.productsType.selectedType);
 
-    const filteredProducts = selectedType === 'All'
-        ? products
-        : products.filter(product => product.type === selectedType);
+    const range = useSelector((state: RootState) => state.productsRange.selectedRange)
+
+    const filteredProducts = products.filter(product => {
+        const matchesType = selectedType === 'All' || product.type === selectedType;
+        const matchesPrice = product.price >= 0 && product.price <= range;
+        return matchesType && matchesPrice;
+    });
 
 
     const [columnVisibility, setColumnVisibility] = useState({
@@ -40,10 +44,10 @@ export function DataTable() {
             <TableHeader>
                 <TableRow>
                     {columnVisibility["name"] && <TableHead className="w-[100px]">Product Name</TableHead>}
-                    {columnVisibility["price"] &&<TableHead>Product Price</TableHead>}
-                    {columnVisibility["type"] &&<TableHead>Product Type</TableHead>}
-                    {columnVisibility["stock"] &&<TableHead>Current Stock</TableHead>}
-                    {columnVisibility["soldUnits"] &&<TableHead>Sold Units</TableHead>}
+                    {columnVisibility["price"] && <TableHead>Product Price</TableHead>}
+                    {columnVisibility["type"] && <TableHead>Product Type</TableHead>}
+                    {columnVisibility["stock"] && <TableHead>Current Stock</TableHead>}
+                    {columnVisibility["soldUnits"] && <TableHead>Sold Units</TableHead>}
                     <TableHead>
                         <Dropdown columnVisibility={columnVisibility} setColumnVisibility={setColumnVisibility} />
                     </TableHead>
@@ -52,11 +56,11 @@ export function DataTable() {
             <TableBody>
                 {filteredProducts.map((product) => (
                     <TableRow key={product.id}>
-                        {columnVisibility["name"] &&<TableCell className="font-medium">{product.name}</TableCell>}
-                        {columnVisibility["price"] &&<TableCell>{product.price}</TableCell>}
-                        {columnVisibility["type"] &&<TableCell>{product.type}</TableCell>}
-                        {columnVisibility["stock"] &&<TableCell>{product.stock}</TableCell>}
-                        {columnVisibility["soldUnits"] &&<TableCell>{product.soldUnits}</TableCell>}
+                        {columnVisibility["name"] && <TableCell className="font-medium">{product.name}</TableCell>}
+                        {columnVisibility["price"] && <TableCell>{product.price}</TableCell>}
+                        {columnVisibility["type"] && <TableCell>{product.type}</TableCell>}
+                        {columnVisibility["stock"] && <TableCell>{product.stock}</TableCell>}
+                        {columnVisibility["soldUnits"] && <TableCell>{product.soldUnits}</TableCell>}
                     </TableRow>
                 ))}
             </TableBody>

@@ -10,9 +10,10 @@ import { RootState } from "@/redux/store"
 import { useDispatch } from "react-redux"
 import { selectType } from "@/redux/slices/typeSlice"
 
-const Filter = () => {
+const TypeFilter = () => {
 
     const types = useSelector((state: RootState) => state.productsType.data)
+
     const dispatch = useDispatch()
 
     const onSelectType = (value: string) => {
@@ -41,4 +42,4 @@ const Filter = () => {
     )
 }
 
-export default Filter
+export default TypeFilter
