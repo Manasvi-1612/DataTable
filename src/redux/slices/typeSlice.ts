@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 const initialState = {
     data: ['type1'],
     selectedType: 'All'
-} as { data: string[], selectedType: string, selectedRange: string };
+} as { data: string[], selectedType: string };
 
 
 const typeSlice = createSlice({
@@ -15,9 +15,9 @@ const typeSlice = createSlice({
         },
         selectType: (state, action: PayloadAction<string>) => {
             state.selectedType = action.payload;
-        },
+        }
     }
 })
 
-export const { addType, selectType } = typeSlice.actions
+export const { addType,selectType } = typeSlice.actions
 export default typeSlice.reducer;
